@@ -1,0 +1,25 @@
+name: Daily Auto Commit
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # প্রতিদিন বাংলাদেশ সময় ভোর ৬:০০ টায় এটি রান হবে
+  workflow_dispatch: # চাইলে আপনি নিজেও ম্যানুয়ালি রান করতে পারবেন
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Update Activity Log
+      run: |
+        echo "Last update: $(date)" > update.txt
+
+    - name: Commit and Push Changes
+      run: |
+        git config --global user.name "techbd707-cmyk"
+        git config --global user.email "techbd707@gmail.com"
+        git add update.txt
+        git commit -m "chore: automated daily activity update [skip ci]" || exit 0
+        git push
